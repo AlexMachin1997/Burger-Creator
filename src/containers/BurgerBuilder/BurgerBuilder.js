@@ -1,5 +1,16 @@
-import React, {Component} from "react";
+/* 
+Import Notes: 
+- Import react component to turn it in a statefull component
+- Import the higher order component AUX, it will be the wrapper it generates the children props (ANYTHING IN BETWEEN)
+- Imports Burgers (Ingredients)
+- Imports the burger controls (Labels, Buttons)
+- Import Modal to show the OrderSummary, which is why the OrderSummary is imported
+- Imports a custom axios custom instance which imports axios and has a base URL from the Firebase URL. Now the Post URL just needs to be /post-order.json
+- Import Spinner so when the ingredients are being fetched and the orders are submitted the spinner wil show
+- Import withErrorHandler o handle axios errors
+*/
 
+import React, {Component} from "react";
 import Aux from "../../hoc/Auxiliary/Auxiliary"; //Imports Aux Wrapper (Higher Order Function)
 import Burger from "../../components/Burger/Burger"; //Imports Dynamic Ingredients
 import BuildControls from "../../components/Burger/BuildControls/BuildControls"; //Imports Build Controls Component
@@ -18,7 +29,48 @@ const INGREDIENT_PRICES = {
     bacon: 0.7
 };
 
-//Stateful Component, Has Access To The States via This keyword Which Looks To The Class Then Looks At The States
+
+/* 
+Burger Builder Note:
+- The inital states are set :
+    - ingredients is null by default (No Ingredients At Start), but when additional ingredients are added its updated
+    - totalPrice is just the default price without any additional ingredients
+    - purchaseable is if the order component can be clicked or not
+    - modalDisplay is if the modal can be displayed or not, depends on the order button state
+    - loading, if something is being fetched or processed then show spinner else dont display. 
+    - error state for display errors e.g. ingredients cant be displayed
+
+- componentDidMount() 
+    - fetches the ingredietns and sets the response of the ingredients from null to whatever the response data is
+    - Any errors error is set to true
+
+- updatePurchaseState() 
+    - Loops through the object via map
+    - Returns the igKey from each loop
+    - Reduces it 
+    - If its greater tahn 0 then set the purchaseale to true, else dont allow orders to be processed
+
+- addIngredientsHandler() & removeIngredientsHandler Notes
+    - Fetches old ingredient count
+    - Updates it by adding 1
+    - Copies old state 
+    - Set old amount equal to the new count 
+    - Fetch prices
+    - Old + new price
+    - Set state - total price is set to the new price and set the ingredients equal to updated ingredients
+    - Then use the updatePurchase() and pass in the new ingreidnets so the price can be adjusted
+    - Same process for removing but instead of adding its - 1
+
+- modalToggleHandler() 
+    - Sets the state to true
+
+- modalCancelHandler() 
+    - Sets the state back to false, it closes the modal
+
+- modalContinueHandler()
+
+- Render method is called and JSX is returned
+*/
 class BurgerBuilder extends Component {
 
     //Inital States Of Application
@@ -30,7 +82,6 @@ class BurgerBuilder extends Component {
         loading: false, //Loading Is False
         error: false //No Errors By Default
     }
-
 
     //Get Request To Firebase, Then Set Ingredients Object TO Response.data 
     componentDidMount () {
@@ -154,40 +205,29 @@ class BurgerBuilder extends Component {
     //Sending A Post Request Using The Axios Instance
     //.json Is Needed For THe Firebase Backend To Work
     modalContinueHandler = () => {
-        
-        //Triggers Load Icon Whilst The Data Gets Added
-        this.setState({loading: true})
+   
 
-        //Dummy Javascript Object Which Then Gets Added To Firebase
-        const order = {
-            ingrdients: this.state.ingredients,
-            price: this.state.totalPrice, //Recalculation Would Be Needed If The Ingrdients Were Stored On The Server 
-            customer: {
-                name: "Alex Machin",
-                address: {
-                    street: "Test 1",
-                    postalCode: "TS1 3QE",
-                    country: "United Kingdom"
-                },
-                email: "TEST@test.com"
-            },
-            deliveryMethd: "fastest"
+        //Empty Array
+        const queryParams = [];
+      
+        //Go through the current state of ingredients and set the URL to whatever the current ingredient state is.
+        for(let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
         }
 
-        //Posts Fake Server Data Via Axios.post(arg1,arg2)
-        //.json is required for Firebase
-        axios.post("/postorders.json", order)
-        
-            //Once the order has been Submitted set the load and modalDisplay to false
-            .then(response=>{
-                this.setState({loading: false, modalDisplay: false})
-            })
+        //For each string in the array the yare joine together by a & sign.
+        //queryString is then passed into the next stack which is checkout, this allows data to be intercepted
 
-            //Something Goes Wrong Then The Modlal And Lading Screen Are Set To False
-            .catch(error => {
-                console.log(error);
-                this.setState({loading: false, modalDisplay: false});
-            });
+
+        queryParams.push("price=" + this.state.totalPrice);
+        const queryString = queryParams.join("&");
+        
+        //Pushes The Checkout Component Onto The Stack
+        console.log(this.props);
+        this.props.history.push({
+            pathname: "checkout",
+            search: "?" + queryString
+        })
     }
 
     render() {
@@ -220,13 +260,9 @@ class BurgerBuilder extends Component {
                 
                 //Aux Is A HOC Wrapper Which Generates Child Elements
                 <Aux>
-
-                    <Burger 
-                        ingredients={this.state.ingredients} //Shows Ingredeients (Logic In The Burger Functional Component)
-                    > 
+                    {/*Shows Ingredeients (Logic In The Burger Functional Component*/}
+                    <Burger ingredients={this.state.ingredients}/> 
                     
-                    </Burger>
-
                     <BuildControls
                        ingredientAdded={this.addIngredientHandler} //Reference To The Add Ingrdient Method Above
         
@@ -236,7 +272,7 @@ class BurgerBuilder extends Component {
         
                        disabled={disabledInfo} //Disabled prop passing the disabledInfo Object
         
-                       purchasable={this.state.purchasable} //Order Button Active Or Note
+                       purchasable={this.state.purchasable} //Order Button Active Or Not
         
                        ordered={this.modalToggleHandler} //Order Button Prop Which Passes A Reference To The Modal Toggler
                     />
@@ -272,14 +308,9 @@ class BurgerBuilder extends Component {
                 */}
 
                 <Modal show={this.state.modalDisplay} modalClosed={this.modalCancelHandler}> 
-                   
-                    
                     {orderSummary}
-                
                 </Modal>
-                
                 {burger}
-            
             </Aux>
         );
     }

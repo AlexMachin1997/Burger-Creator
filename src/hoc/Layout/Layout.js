@@ -44,6 +44,7 @@ class Layout extends Component {
                     If the previous state is false, it sets it to true
                     If the previous state is true it sets it to false to hide the menu
                 */}
+                
                 <Toolbar drawerToggleClicked={this.sideDrawerToggleHandler} />
                 
                 <SideDrawer
