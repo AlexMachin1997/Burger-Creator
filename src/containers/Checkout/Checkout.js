@@ -40,7 +40,6 @@ class Checkout extends Component {
         this.setState({
             ingredients : ingredients,
             totalPrice : price
-        
         })
     }
 

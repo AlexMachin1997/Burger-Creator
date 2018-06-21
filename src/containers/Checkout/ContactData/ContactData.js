@@ -29,7 +29,7 @@ class ContactData extends Component {
 
         //Dummy Javascript Object Which Then Gets Added To Firebase
         const order = {
-            ingrdients: this.props.ingredients,
+            ingredients: this.props.ingredients,
             price: this.props.price, //Recalculation Would Be Needed If The Ingrdients Were Stored On The Server 
             customer: {
                 name: "Alex Machin",
@@ -45,12 +45,13 @@ class ContactData extends Component {
 
         //Posts Fake Server Data Via Axios.post(arg1,arg2)
         //.json is required for Firebase
-        axios.post("/postorders.json", order)
+        axios.post("/orders.json", order)
         
             //Once the order has been Submitted set the load and modalDisplay to false
             .then(response=>{
-                this.setState({loading: false})
-                this.props.history.push("/")
+                console.log(response); 
+                this.setState({loading: false});
+                this.props.history.push("/"); //Redirects back to root page
             })
 
             //Something Goes Wrong Then The Modlal And Lading Screen Are Set To False
