@@ -1,6 +1,23 @@
-import React from 'react';
+/* 
+Imports Notice
+- Import react so props can be recieved and sent
+- Imports Button.css so CSS modules can be used
+*/
 
+import React from 'react';
 import classes from './Button.css';
+
+/* 
+Imports Notice
+- By default the button gets a styling of Button
+
+- But then the success or danger classes are applied conditionally depending if the sucess or danger string is applied
+    - Button + Success = Green Button 
+    - Button + Danger = Red Button
+    - To pass in the conditional button type btntype needs to be passeed into th Button component
+
+- The any text in between is generated via the props.children
+*/
 
 const button = (props) => (
 
