@@ -38,9 +38,7 @@ class Orders extends Component {
             console.log(this.state.orders)
 
     }
-
-
-    
+   
     render() {
         return (
             <div>

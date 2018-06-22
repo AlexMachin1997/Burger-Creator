@@ -10,27 +10,28 @@ To get started with my project I've provided some simple steps
 ---------
 
 **Download or Pull This Repo**
-	Top of this page you can see where it says clone or download
+Top of this page you can see where it says clone or download
 
- **Install Node**
+**Install Node**
 	https://nodejs.org/en/
 
   **Install Yarn (Optional)**
    https://yarnpkg.com/en/docs/install
 
-  **Download Atom(Optional)**
+**Download Atom(Optional)**
 	 https://atom.io/
 
- **Install all the node packages**
-  On the root of this project run on your terminal (if you want you can do this with yarn but that's optional)
+**Install all the node packages**
+On the root of this project run on your terminal (if you want you can do this with yarn but that's optional)
 
     npm install
 
- **Update the node packages**
-  On the root of this project run on your terminal (if you want you can do this with yarn but that's optional)
+**Update the node packages**
+On the root of this project run on your terminal (if you want you can do this with yarn but that's optional)
 
     npm update
 
 **Start the server**
 On the root of the project run the start which command which can be seen below
-  yarn start
+
+    yarn start
