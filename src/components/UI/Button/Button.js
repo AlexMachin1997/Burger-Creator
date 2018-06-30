@@ -27,6 +27,7 @@ const button = (props) => (
     //onClick Event Refers To A Method Passed Via Props
     //{props.children} generates the button text e.g. Cancel Or Continue
     <button
+        disabled = {props.disabled}
         className={[classes.Button, classes[props.btnType]].join(' ')} onClick={props.clicked}>
         {props.children}
     </button>

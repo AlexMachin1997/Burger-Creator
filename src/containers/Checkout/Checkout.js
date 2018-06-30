@@ -27,6 +27,7 @@ class Checkout extends Component {
       
         let price = 0;
 
+        //WILL BE REPLACE WITH REDUX Bascially current the price is passed in to the URL
         for(let param of query.entries()) {
             if( param[0]=== "price") {
                 price = param[1];
@@ -34,7 +35,6 @@ class Checkout extends Component {
                 //["sald","1"]
                 ingredients[param[0]] = +param[1]; 
             }
-     
         }
 
         this.setState({
